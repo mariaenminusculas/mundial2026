@@ -58,6 +58,7 @@
   .pod1 .av{background:var(--oro);color:#5a4500}.pod1 .base{background:linear-gradient(#f3cf63,#e9b949);height:78px;color:#5a4500}.pod1 .ppts{color:#9a6b00}
   .pod2 .av{background:#b9c0c7;color:#39414a}.pod2 .base{background:linear-gradient(#cfd5db,#b9c0c7);height:58px;color:#39414a}
   .pod3 .av{background:#d59a6a;color:#4a2c12}.pod3 .base{background:linear-gradient(#e0a878,#d59a6a);height:44px;color:#4a2c12}
+  .pod0 .av{background:#cfd5db;color:#39414a}.pod0 .base{background:#dfe3e6;height:40px;color:#6b7a72}
   .crown{font-size:1.1rem}
   /* barras clasificacion */
   .barrow{display:flex;align-items:center;gap:8px;padding:6px 2px}
@@ -290,34 +291,41 @@ function sortedPlayers(){return [...PLAYERS].sort((a,b)=>b.score-a.score || a.na
 
 function renderClasif(){
   const s=sortedPlayers();
+  // ranking de competición: los empatados comparten puesto (1,1,3…)
+  s.forEach((p,i)=>{ p.rank = (i>0 && p.score===s[i-1].score) ? s[i-1].rank : i+1; });
+  const anyScore=s.some(p=>p.score>0);
   const max=Math.max(1,...s.map(p=>p.score));
-  // podio
-  const pod=[1,0,2]; // posiciones visuales: 2º,1º,3º
+  const medal=r=> r===1?"🥇":r===2?"🥈":r===3?"🥉":"";
+  // podio: posiciones visuales 2º,1º,3º (índices 1,0,2)
+  const pod=[1,0,2];
   let podium='<div class="podium">';
-  pod.forEach(i=>{
-    const p=s[i]; if(!p){podium+='<div class="pod"></div>';return;}
-    const cls=i===0?"pod1":i===1?"pod2":"pod3";
-    const medal=i===0?"🥇":i===1?"🥈":"🥉";
-    const crown=i===0?'<div class="crown">👑 CAMPEÓN</div>':'';
+  pod.forEach(idx=>{
+    const p=s[idx]; if(!p){podium+='<div class="pod"></div>';return;}
+    const scored = anyScore && p.score>0;
+    const r=p.rank;
+    const cls = scored ? `pod${Math.min(r,3)}` : 'pod0';
+    const av  = scored ? medal(Math.min(r,3)) : (idx+1);
+    const crown = (scored && r===1) ? '<div class="crown">👑 CAMPEÓN</div>' : '';
     podium+=`<div class="pod ${cls}">${crown}
-      <div class="av">${medal}</div>
+      <div class="av">${av}</div>
       <div class="pname">${esc(p.name)}</div>
       <div class="ppts">${p.score} pts</div>
-      <div class="base">${i+1}</div></div>`;
+      <div class="base">${scored?r:(idx+1)}</div></div>`;
   });
   podium+='</div>';
-  // barras
+  // barras: color por puesto (empatados = mismo color)
   let bars='';
   s.forEach((p,i)=>{
-    const cls=i<3?`top${i+1}`:'';
+    const scored = anyScore && p.score>0;
+    const cls = (scored && p.rank<=3) ? `top${p.rank}` : '';
     bars+=`<div class="barrow ${cls}">
-      <div class="rk">${i+1}</div>
+      <div class="rk">${scored?p.rank:(i+1)}</div>
       <div class="bn">${esc(p.name)}</div>
       <div class="track"><div class="fill" style="width:${Math.round(p.score/max*100)}%"></div></div>
       <div class="bv">${p.score}</div></div>`;
   });
   $("#tab-clasif").innerHTML=`<div class="card"><h2>🏆 Clasificación</h2>${podium}${bars}
-    ${PLAYERS.some(p=>p.score>0)?'':'<div class="note">Las barras crecerán cuando la columna C (puntuación) tenga valores.</div>'}</div>`;
+    ${anyScore?'':'<div class="note">Las barras y el podio se ordenarán cuando haya resultados.</div>'}</div>`;
 }
 
 function renderIndiv(){
