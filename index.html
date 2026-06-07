@@ -110,10 +110,8 @@
 
   <div class="pot-banner">
     <span class="coin">💰</span>
-    <div><div class="euro">110 €</div><div class="ptxt">en juego</div></div>
+    <div><div class="euro" id="potEuro">—</div><div class="ptxt" id="potTxt">en juego</div></div>
   </div>
-
-  <div id="statsband" class="stats"></div>
 
   <nav class="tabs">
     <button data-tab="clasif" class="active">🏆 Clasificación</button>
@@ -137,10 +135,15 @@
    Vacías = se muestran los datos incrustados (instantánea).
    =================================================================== */
 const CONFIG = {
-  RESP_CSV: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=167272115&single=true&output=csv",
-  RESULT_CSV: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=381636068&single=true&output=csv",
+  RESP_CSV:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=167272115&single=true&output=csv",
+  RESULT_CSV:"https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=381636068&single=true&output=csv",
+  // vía alternativa (lectura directa, más fresca) por si la publicada tarda en propagar:
+  RESP_ALT:  "https://docs.google.com/spreadsheets/d/1Bbga87sGlUr1F97ACDxO80_8zjOVli7eDG-vahhdPt4/gviz/tq?tqx=out:csv&gid=167272115",
+  RESULT_ALT:"https://docs.google.com/spreadsheets/d/1Bbga87sGlUr1F97ACDxO80_8zjOVli7eDG-vahhdPt4/gviz/tq?tqx=out:csv&gid=381636068",
   AUTO_REFRESH_SEG: 90
 };
+/* nombres a ocultar siempre (filas de prueba) */
+const EXCLUIR = ["filllled by chatgpt"];
 
 const SNAPSHOT_CSV = `"","Nombre","","","","Equipo ganador /10p","","¿Resultado exacto? /30p","","","España - Cabo Verde","","España - Cabo Verde","","Arabia Saudi - Uruguay","","Arabia Saudi - Uruguay","","España - Arabia Saudi, ¿quién gana?","","España - Arabia Saudi, ¿cuánto?","","Uruguay - Cabo Verde, ¿quién gana?","","Uruguay - Cabo Verde, ¿cuánto?","","Cabo Verde - Arabia Saudi, ¿quién gana?","","Cabo Verde - Arabia Saudi, ¿cuánto?","","Uruguay - España, ¿quién gana?","","Uruguay - España, ¿cuánto?","","Extra 50","","","Grupo A","","Grupo B","","Grupo C","","Grupo D","","Grupo E","","Grupo F","","Grupo G","","Grupo H","","Grupo I","","Grupo J","","Grupo K","","Grupo L","","","Campeon","","Primer gol torneo pais","","Primer gol torneo jugador","","Primer gol Espana jugador","","Rival primer gol Espana","","Max goleador Espana","","Max goleador torneo","","Primer expulsado jugador","","Primer expulsado pais","","","","","",""
 "23/05/2026 22:35:46","Maria Rubio","0","0","0","Mexico","0","2-0","0","0","España","0","3-0","0","Uruguay","0","1-2","0","España","0","2-0","0","Uruguay","0","2-0","0","Arabia Saudi","0","1-0","0","España","0","1-0","0","","0","0","México","0","Canadá","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","España","0","México","0","Santiago Giménez","0","Lamine Yamal","0","Cabo Verde","0","Oyarzabal ","0","Kylian Mbappé","0","Sead Kolašinac","0","Bosnia-Herzegovina"
@@ -230,7 +233,10 @@ function findHeader(rows){
 }
 function buildPlayers(rows){
   const h=findHeader(rows);
-  const body=rows.slice(h.row+1).filter(r=>String(r[h.nameCol]||"").trim()!=="");
+  const body=rows.slice(h.row+1).filter(r=>{
+    const nm=norm(r[h.nameCol]);
+    return nm!=="" && !EXCLUIR.some(x=>norm(x)===nm);
+  });
   return body.map(r=>({
     name:(r[h.nameCol]||"").trim(),
     scoreC:parseFloat(String(r[2]||"0").replace(",","."))||0,   // columna C de la hoja
@@ -273,14 +279,11 @@ function applyScores(){
 
 /* ---------- render ---------- */
 function renderStats(){
-  $("#statsband").innerHTML=[
-    {num:PLAYERS.length, lab:"Participantes"},
-    {num:"110 €", lab:"En juego"},
-    {num:QUESTIONS.length, lab:"Preguntas"},
-  ].map(c=>`<div class="stat"><div class="num">${c.num}</div><div class="lab">${c.lab}</div></div>`).join("");
+  const bote=PLAYERS.length*10;                 // 10 € por participante registrado
+  $("#potEuro").textContent=bote+" €";
   const anyScore=PLAYERS.some(p=>p.score>0);
   $("#subtitle").textContent=anyScore?`${PLAYERS.length} participantes · clasificación en directo`
-    :`${PLAYERS.length} participantes · puntuaciones aún a 0 (columna C)`;
+    :`${PLAYERS.length} participantes · puntuaciones aún a 0`;
 }
 
 function sortedPlayers(){return [...PLAYERS].sort((a,b)=>b.score-a.score || a.name.localeCompare(b.name));}
@@ -328,7 +331,7 @@ function renderIndiv(){
 }
 function showP(p){
   if(!p)return;
-  let h=`<div class="q" style="border:0;padding-top:12px"><div class="ql">Puntuación total (columna C)</div>
+  let h=`<div class="q" style="border:0;padding-top:12px"><div class="ql">Puntuación total</div>
     <div class="qv" style="font-size:1.3rem;color:var(--verde)">${p.score} pts</div></div>`;
   let lb="";
   QUESTIONS.forEach(q=>{
@@ -382,6 +385,14 @@ async function fetchCSV(url){
   const r=await fetch(u); if(!r.ok)throw new Error("HTTP "+r.status);
   return parseCSV(await r.text());
 }
+/* prueba varias URLs en orden y devuelve la primera con datos */
+async function fetchFirst(urls){
+  for(const u of urls){
+    if(!u) continue;
+    try{ const rows=await fetchCSV(u); if(rows && rows.length>2) return rows; }catch(e){}
+  }
+  throw new Error("sin datos");
+}
 function useSnapshot(){
   CORRECT=null;
   PLAYERS=buildPlayers(parseCSV(SNAPSHOT_CSV));
@@ -393,8 +404,8 @@ async function load(){
   try{
     if(CONFIG.RESP_CSV){
       const [resp,res]=await Promise.all([
-        fetchCSV(CONFIG.RESP_CSV),
-        CONFIG.RESULT_CSV?fetchCSV(CONFIG.RESULT_CSV):Promise.resolve(null)
+        fetchFirst([CONFIG.RESP_CSV, CONFIG.RESP_ALT]),
+        fetchFirst([CONFIG.RESULT_CSV, CONFIG.RESULT_ALT]).catch(()=>null)
       ]);
       const players=buildPlayers(resp);
       if(!players.length) throw new Error("RESP vacío");
