@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porra Mundial 2026</title>
+<style>
+  :root{
+    --verde:#0a7d3c; --verde-osc:#075c2c; --oro:#e9b949; --rojo:#d64045; --azul:#1f7ae0; --morado:#7b3fb3;
+    --bg:#f4f6f5; --card:#ffffff; --txt:#1d2421; --gris:#6b7a72; --linea:#e3e8e5;
+    --sombra:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.45;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:14px}
+  header.top{background:
+      radial-gradient(120% 140% at 0% 0%, rgba(233,185,73,.30), transparent 45%),
+      radial-gradient(120% 140% at 100% 0%, rgba(214,64,69,.30), transparent 45%),
+      linear-gradient(135deg,var(--verde),var(--verde-osc));
+    color:#fff;border-radius:16px;padding:16px 18px 0;box-shadow:var(--sombra);position:relative;overflow:hidden}
+  header.top h1{font-size:1.4rem;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+  header.top p{opacity:.92;font-size:.85rem;margin-top:3px}
+  .flagline{font-size:1rem;letter-spacing:3px;margin-bottom:4px}
+  .flagline span{font-size:.62rem;letter-spacing:.5px;opacity:.85;vertical-align:middle;margin-left:6px;text-transform:uppercase;font-weight:700}
+  .ball{font-size:1.35rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+  .hoststripe{height:7px;margin:14px -18px 0;display:flex}
+  .hoststripe i{flex:1}
+  .hoststripe i:nth-child(1){background:#0a7d3c}.hoststripe i:nth-child(2){background:#e9b949}
+  .hoststripe i:nth-child(3){background:#d64045}.hoststripe i:nth-child(4){background:#1f7ae0}
+  .hoststripe i:nth-child(5){background:#7b3fb3}
+  /* bote 110€ */
+  .pot-banner{margin:14px 0;border-radius:14px;padding:16px 18px;color:#5a4500;
+    background:linear-gradient(135deg,#ffe9a8,#f6c945);box-shadow:var(--sombra);
+    display:flex;align-items:center;gap:14px}
+  .pot-banner .euro{font-size:2.3rem;font-weight:900;line-height:1;letter-spacing:-1px}
+  .pot-banner .ptxt{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;opacity:.85}
+  .pot-banner .coin{font-size:2rem}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:0 0 14px}
+  .stat{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--sombra);text-align:center;border-top:3px solid var(--verde)}
+  .stat:nth-child(1){border-top-color:var(--azul)}.stat:nth-child(2){border-top-color:var(--morado)}
+  .stat:nth-child(3){border-top-color:var(--rojo)}
+  .stat .num{font-size:1.45rem;font-weight:800;color:var(--verde)}
+  .stat .lab{font-size:.7rem;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+  nav.tabs{display:flex;gap:6px;background:var(--card);border-radius:12px;padding:5px;box-shadow:var(--sombra);position:sticky;top:8px;z-index:20;margin-bottom:14px}
+  nav.tabs button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:9px;font-size:.8rem;font-weight:600;color:var(--gris);cursor:pointer;transition:.15s;white-space:nowrap}
+  nav.tabs button.active{background:var(--verde);color:#fff}
+  .card{background:var(--card);border-radius:14px;box-shadow:var(--sombra);padding:14px;margin-bottom:12px}
+  .card h2{font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+  /* podio */
+  .podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:6px 0 16px}
+  .pod{flex:1;max-width:33%;text-align:center}
+  .pod .av{width:46px;height:46px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.1rem}
+  .pod .pname{font-weight:700;font-size:.82rem;line-height:1.15;min-height:2.3em;display:flex;align-items:center;justify-content:center}
+  .pod .ppts{font-weight:800;font-size:.95rem}
+  .pod .base{border-radius:8px 8px 0 0;margin-top:6px;color:#fff;font-weight:900;font-size:1.4rem;display:flex;align-items:center;justify-content:center}
+  .pod1 .av{background:var(--oro);color:#5a4500}.pod1 .base{background:linear-gradient(#f3cf63,#e9b949);height:78px;color:#5a4500}.pod1 .ppts{color:#9a6b00}
+  .pod2 .av{background:#b9c0c7;color:#39414a}.pod2 .base{background:linear-gradient(#cfd5db,#b9c0c7);height:58px;color:#39414a}
+  .pod3 .av{background:#d59a6a;color:#4a2c12}.pod3 .base{background:linear-gradient(#e0a878,#d59a6a);height:44px;color:#4a2c12}
+  .crown{font-size:1.1rem}
+  /* barras clasificacion */
+  .barrow{display:flex;align-items:center;gap:8px;padding:6px 2px}
+  .barrow .rk{width:22px;text-align:center;font-weight:800;font-size:.82rem;color:var(--gris);flex:none}
+  .barrow .bn{width:96px;font-weight:600;font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:none}
+  .barrow .track{flex:1;background:#eef1ef;border-radius:6px;height:18px;overflow:hidden}
+  .barrow .fill{height:100%;border-radius:6px;background:var(--verde);min-width:2px;transition:width .5s}
+  .barrow.top1 .fill{background:linear-gradient(90deg,#f3cf63,#e9b949)}
+  .barrow.top2 .fill{background:#b9c0c7}.barrow.top3 .fill{background:#d59a6a}
+  .barrow .bv{width:38px;text-align:right;font-weight:800;font-size:.82rem;flex:none}
+  .barrow.top1 .bn{color:#9a6b00}
+  /* selects + detalle */
+  select{width:100%;padding:11px 12px;border:1.5px solid var(--linea);border-radius:10px;font-size:.95rem;background:#fff;color:var(--txt);font-weight:600;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7a72' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center}
+  .q{padding:9px 0;border-bottom:1px solid var(--linea)}.q:last-child{border-bottom:0}
+  .q .ql{font-size:.74rem;color:var(--gris);margin-bottom:2px}
+  .q .qv{font-weight:700;font-size:.95rem}
+  .blockhead{font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--verde);margin:14px 0 4px}
+  .blockhead:first-child{margin-top:4px}
+  .ans{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--linea);font-size:.9rem}
+  .ans:last-child{border-bottom:0}
+  .ans .who{flex:1;font-weight:600}.ans .cnt{color:var(--gris);font-size:.8rem;font-weight:700}
+  .ansbar{height:7px;border-radius:4px;background:var(--azul);opacity:.85;margin-top:3px}
+  .dist .lbl{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin:8px 0 2px}
+  .dist .lbl .n{color:var(--gris)}
+  .footbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 2px 18px;font-size:.74rem;color:var(--gris)}
+  .btn{border:0;background:var(--verde);color:#fff;font-weight:700;font-size:.8rem;padding:8px 14px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .err{background:#fdeaea;color:var(--rojo);border-radius:10px;padding:12px;font-size:.85rem;margin:10px 0}
+  .note{font-size:.78rem;color:var(--gris);margin-top:8px}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid #fff6;border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .hidden{display:none}
+  @media(max-width:480px){
+    header.top h1{font-size:1.15rem}.stat .num{font-size:1.2rem}
+    nav.tabs button{font-size:.72rem;padding:9px 3px}
+    .barrow .bn{width:74px}.pot-banner .euro{font-size:1.9rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="flagline">🇨🇦 🇺🇸 🇲🇽 <span>Canadá · EE. UU. · México</span></div>
+    <h1><span class="ball">⚽</span> Porra Mundial 2026</h1>
+    <p id="subtitle">Cargando…</p>
+    <div class="hoststripe"><i></i><i></i><i></i><i></i><i></i></div>
+  </header>
+
+  <div class="pot-banner">
+    <span class="coin">💰</span>
+    <div><div class="euro">110 €</div><div class="ptxt">en juego</div></div>
+  </div>
+
+  <div id="statsband" class="stats"></div>
+
+  <nav class="tabs">
+    <button data-tab="clasif" class="active">🏆 Clasificación</button>
+    <button data-tab="indiv">👤 Por persona</button>
+    <button data-tab="preg">❓ Por pregunta</button>
+  </nav>
+
+  <section id="tab-clasif"></section>
+  <section id="tab-indiv" class="hidden"></section>
+  <section id="tab-preg" class="hidden"></section>
+
+  <div class="footbar">
+    <span id="updated"></span>
+    <button class="btn" id="refresh">↻ Actualizar</button>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   CONFIG · pega las URLs "Publicar en la web (CSV)" de cada pestaña.
+   Vacías = se muestran los datos incrustados (instantánea).
+   =================================================================== */
+const CONFIG = {
+  RESP_CSV: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=167272115&single=true&output=csv",
+  RESULT_CSV: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRi_KkqpgSas-WcrCiS-vcaoLR_ieBF2sJ6Cn86fF1JYMfuUlB9J8jByif5bzgn1wlXpsBZMQJSmm5p/pub?gid=381636068&single=true&output=csv",
+  AUTO_REFRESH_SEG: 90
+};
+
+const SNAPSHOT_CSV = `"","Nombre","","","","Equipo ganador /10p","","¿Resultado exacto? /30p","","","España - Cabo Verde","","España - Cabo Verde","","Arabia Saudi - Uruguay","","Arabia Saudi - Uruguay","","España - Arabia Saudi, ¿quién gana?","","España - Arabia Saudi, ¿cuánto?","","Uruguay - Cabo Verde, ¿quién gana?","","Uruguay - Cabo Verde, ¿cuánto?","","Cabo Verde - Arabia Saudi, ¿quién gana?","","Cabo Verde - Arabia Saudi, ¿cuánto?","","Uruguay - España, ¿quién gana?","","Uruguay - España, ¿cuánto?","","Extra 50","","","Grupo A","","Grupo B","","Grupo C","","Grupo D","","Grupo E","","Grupo F","","Grupo G","","Grupo H","","Grupo I","","Grupo J","","Grupo K","","Grupo L","","","Campeon","","Primer gol torneo pais","","Primer gol torneo jugador","","Primer gol Espana jugador","","Rival primer gol Espana","","Max goleador Espana","","Max goleador torneo","","Primer expulsado jugador","","Primer expulsado pais","","","","","",""
+"23/05/2026 22:35:46","Maria Rubio","0","0","0","Mexico","0","2-0","0","0","España","0","3-0","0","Uruguay","0","1-2","0","España","0","2-0","0","Uruguay","0","2-0","0","Arabia Saudi","0","1-0","0","España","0","1-0","0","","0","0","México","0","Canadá","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","España","0","México","0","Santiago Giménez","0","Lamine Yamal","0","Cabo Verde","0","Oyarzabal ","0","Kylian Mbappé","0","Sead Kolašinac","0","Bosnia-Herzegovina"
+"24/05/2026 14:41:08","Astorqui & Miren","0","0","0","Mexico","0","3-1","0","0","España","0","5-0","0","Empate","0","1-1","0","España","0","4-0","0","Uruguay","0","2-0","0","Arabia Saudi","0","0-2","0","España","0","1-3","0","","0","0","México","0","Suiza","0","Brasil","0","Turquía","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Croacia","0","0","España ","0","Mexico","0","Raúl Jiménez ","0","Oyarzabal","0","Cabo Verde","0","Oyarzabal ","0","Mbappe","0","Edson Alvarez","0","México "
+"26/05/2026 20:04:17","Iñaki Goiko","0","0","0","Mexico","0","2-1","0","0","España","0","3-0","0","Uruguay","0","0-2","0","España","0","3-1","0","Uruguay","0","1-0","0","Arabia Saudi","0","1-2","0","Empate","0","1-1","0","","0","0","México","0","Canadá","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Colombia","0","Croacia","0","0","Brasil","0","México","0","Raúl Jiménez","0","Mikel Oyarzabal","0","Cabo Verde","0","Lamine Yamal","0","Rapinha","0","Sead Kolašinac","0","Bosnia-Herzegovina"
+"2/06/2026 9:48:19","Javi Iribarren","0","0","0","Mexico","0","2-1","0","0","España","0","3-0","0","Uruguay","0","0-2","0","Arabia Saudi","0","4-0","0","Uruguay","0","2-0","0","Cabo Verde","0","2-1","0","España","0","1-2","0","","0","0","México","0","Suiza","0","Brasil","0","Turquía","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","Espana","0","Mexico","0","Santiago Giménez","0","Ferran Torres","0","Cabo Verde","0","Ferran Torres","0","Kylian Mbappé","0","Ali Al-Bulaih","0","Arabia Saudí"
+"3/06/2026 20:47:21","Telmo","0","0","0","Mexico","0","2-0","0","0","España","0","3-0","0","Empate","0","2-2","0","España","0","4-1","0","Uruguay","0","1-0","0","Arabia Saudi","0","1-2","0","España","0","0-2","0","","0","0","México","0","Suiza","0","Marruecos","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","España","0","Mexico","0","Santiago Gimenez","0","Mikel Oyarzabal","0","Cabo verde","0","Mikel oyarzabal","0","Mbappe","0","    Nkosinathi Sibisi","0","Sudáfrica"
+"3/06/2026 20:52:20","Bea","0","0","0","Empate","0","1-1","0","0","España","0","4-0","0","Uruguay","0","2-1","0","España","0","3-0","0","Uruguay","0","3-2","0","Arabia Saudi","0","1-2","0","Empate","0","1-1","0","","0","0","República de Corea","0","Canadá","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","Francia","0","Mexico","0","Raul gimenez","0","Mikel oyarzabal","0","Cabo verde","0","Mikel oyarzabal","0","Harry kane","0","Nikola Katić","0","Bosnia"
+"6/06/2026 22:09:08","Naia","0","0","0","Mexico","0","2-1","0","0","España","0","3-0","0","Uruguay","0","1-4","0","España","0","3-2","0","Uruguay","0","5-0","0","Arabia Saudi","0","0-1","0","España","0","2-4","0","","0","0","México","0","Catar","0","Brasil","0","Paraguay","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Croacia","0","0","Brasil","0","Mexico","0","Raul Gimenez","0","Mikel Oyarzabal","0","Cabo Verde","0","Mikel Oyarzabal","0","Kylian Mbape","0","Raul Jimenez","0","Mexico"
+"6/06/2026 22:20:47","Julen","0","0","0","Mexico","0","2-0","0","0","España","0","5-1","0","Uruguay","0","1-2","0","España","0","3-0","0","Uruguay","0","3-1","0","Empate","0","1-1","0","España","0","1-2","0","","0","0","México","0","Suiza","0","Marruecos","0","Turquía","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","España","0","Mexico ","0","Raúl Jiménez ","0","Mikel Oyarzabal ","0","Cabo Verde ","0","Mikel Oyarzabal ","0","Mikel Oyarzabal ","0","David zima ","0","República Checa "
+"6/06/2026 22:24:39","Ane Llorente","0","0","0","Mexico","0","2-1","0","0","España","0","3-2","0","Empate","0","2-2","0","Arabia Saudi","0","3-2","0","Cabo Verde","0","4-3","0","Empate","0","3-3","0","España","0","2-1","0","","0","0","Chequia","0","Catar","0","Haití","0","Paraguay","0","Ecuador","0","Japón","0","Nueva Zelanda","0","España","0","Irak","0","Argentina","0","Uzbekistán","0","Inglaterra","0","0","Alemania","0","EE.UU","0","Raul Jimenez","0","Mikel oyarzabal","0","Cabo verde","0","Mikel Oyarzabal","0","Lamine Yamal","0","Nicolas Otamendi","0","Uruguay"
+"7/06/2026 9:42:48","Koldo","0","0","0","Mexico","0","2-0","0","0","España","0","2-0","0","Uruguay","0","1-3","0","España","0","2-0","0","Uruguay","0","2-0","0","Arabia Saudi","0","0-2","0","Empate","0","1-1","0","","0","0","México","0","Suiza","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","Francia","0","Mexico","0","Raúl Jiménez","0","Mikel Oyarzabal","0","Cabo  Verde","0","Mikel Oyarzabal","0","Mbappé","0"," Mothobi Mvala","0","Bosnia Herzegovina"
+"7/06/2026 11:51:19","filllled by chatgpt","0","0","0","Mexico","0","2-1","0","0","España","0","3-0","0","Uruguay","0","1-2","0","España","0","2-0","0","Uruguay","0","2-1","0","Arabia Saudi","0","1-3","0","España","0","1-2","0","","0","0","México","0","Canadá","0","Brasil","0","EE. UU.","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Inglaterra","0","0","España","0","México","0","Raúl Jiménez","0","Álvaro Morata","0","Cabo Verde","0","Álvaro Morata","0","Kylian Mbappé","0","Sergio Ramos","0","Argentina"
+"7/06/2026 15:17:09","Joseba","0","0","0","Mexico","0","1-0","0","0","España","0","3-0","0","Uruguay","0","1-2","0","España","0","1-0","0","Empate","0","1-1","0","Cabo Verde","0","2-1","0","Empate","0","0-0","0","","0","0","México","0","Bosnia y Herzegovina","0","Marruecos","0","Paraguay","0","Alemania","0","Países Bajos","0","Bélgica","0","España","0","Francia","0","Argentina","0","Portugal","0","Croacia","0","0","Paises Bajos","0","Mexico","0","Santiago Gimenez","0","Mikel Oyarzabal","0","Cabo Verde","0","Mikel Oyarzabal","0","Wout Weghorst","0","Lucas Mendes","0","Catar"
+"7/06/2026 15:28:46","Nora","0","0","0","Empate","0","1-1","0","0","España","0","1-0","0","Uruguay","0","1-2","0","Empate","0","2-2","0","Uruguay","0","1-0","0","Arabia Saudi","0","0-1","0","Empate","0","1-1","0","","0","0","México","0","Catar","0","Marruecos","0","EE. UU.","0","Alemania","0","Países Bajos","0","Egipto","0","España","0","Francia","0","Argentina","0","Portugal","0","Croacia","0","0","francia","0","mexico","0","armando gonzalez","0","mikel oyarzabal","0","cabo verde","0","dani olmo","0","dembele","0","alex zendejas","0","estados unidos"
+`;
+
+/* preguntas (índice 0-based de la columna de RESPUESTA en RESP) */
+const QUESTIONS=[
+ {block:"B1 · Partido inaugural", short:"Inaugural — Ganador", pts:10, type:"winner", col:5},
+ {block:"B1 · Partido inaugural", short:"Inaugural — Resultado exacto", pts:30, type:"marcador", col:7},
+ {block:"B2 · Grupo de España", short:"España–Cabo Verde · Ganador", pts:10, type:"winner", col:10},
+ {block:"B2 · Grupo de España", short:"España–Cabo Verde · Marcador", pts:30, type:"marcador", col:12},
+ {block:"B2 · Grupo de España", short:"Arabia S.–Uruguay · Ganador", pts:10, type:"winner", col:14},
+ {block:"B2 · Grupo de España", short:"Arabia S.–Uruguay · Marcador", pts:30, type:"marcador", col:16},
+ {block:"B2 · Grupo de España", short:"España–Arabia S. · ¿Quién gana?", pts:10, type:"winner", col:18},
+ {block:"B2 · Grupo de España", short:"España–Arabia S. · ¿Cuánto?", pts:30, type:"marcador", col:20},
+ {block:"B2 · Grupo de España", short:"Uruguay–Cabo Verde · ¿Quién gana?", pts:10, type:"winner", col:22},
+ {block:"B2 · Grupo de España", short:"Uruguay–Cabo Verde · ¿Cuánto?", pts:30, type:"marcador", col:24},
+ {block:"B2 · Grupo de España", short:"Cabo Verde–Arabia S. · ¿Quién gana?", pts:10, type:"winner", col:26},
+ {block:"B2 · Grupo de España", short:"Cabo Verde–Arabia S. · ¿Cuánto?", pts:30, type:"marcador", col:28},
+ {block:"B2 · Grupo de España", short:"Uruguay–España · ¿Quién gana?", pts:10, type:"winner", col:30},
+ {block:"B2 · Grupo de España", short:"Uruguay–España · ¿Cuánto?", pts:30, type:"marcador", col:32},
+ {block:"B3 · Ganadores de grupo", short:"Grupo A", pts:10, type:"texto", col:37},
+ {block:"B3 · Ganadores de grupo", short:"Grupo B", pts:10, type:"texto", col:39},
+ {block:"B3 · Ganadores de grupo", short:"Grupo C", pts:10, type:"texto", col:41},
+ {block:"B3 · Ganadores de grupo", short:"Grupo D", pts:10, type:"texto", col:43},
+ {block:"B3 · Ganadores de grupo", short:"Grupo E", pts:10, type:"texto", col:45},
+ {block:"B3 · Ganadores de grupo", short:"Grupo F", pts:10, type:"texto", col:47},
+ {block:"B3 · Ganadores de grupo", short:"Grupo G", pts:10, type:"texto", col:49},
+ {block:"B3 · Ganadores de grupo", short:"Grupo H", pts:10, type:"texto", col:51},
+ {block:"B3 · Ganadores de grupo", short:"Grupo I", pts:10, type:"texto", col:53},
+ {block:"B3 · Ganadores de grupo", short:"Grupo J", pts:10, type:"texto", col:55},
+ {block:"B3 · Ganadores de grupo", short:"Grupo K", pts:10, type:"texto", col:57},
+ {block:"B3 · Ganadores de grupo", short:"Grupo L", pts:10, type:"texto", col:59},
+ {block:"B4 · Preguntas especiales", short:"Campeón del Mundial (país)", pts:50, type:"texto", col:62},
+ {block:"B4 · Preguntas especiales", short:"Primer gol del torneo (país)", pts:20, type:"texto", col:64},
+ {block:"B4 · Preguntas especiales", short:"Primer gol del torneo (jugador)", pts:50, type:"texto", col:66},
+ {block:"B4 · Preguntas especiales", short:"Primer gol de España (jugador)", pts:50, type:"texto", col:68},
+ {block:"B4 · Preguntas especiales", short:"Rival del primer gol de España (país)", pts:20, type:"texto", col:70},
+ {block:"B4 · Preguntas especiales", short:"Máximo goleador de España (jugador)", pts:50, type:"texto", col:72},
+ {block:"B4 · Preguntas especiales", short:"Máximo goleador del torneo (jugador)", pts:50, type:"texto", col:74},
+ {block:"B4 · Preguntas especiales", short:"Primer expulsado del torneo (jugador)", pts:50, type:"texto", col:76},
+ {block:"B4 · Preguntas especiales", short:"Primer expulsado del torneo (país)", pts:30, type:"texto", col:78},
+];
+
+/* ---------- utilidades ---------- */
+const $=s=>document.querySelector(s);
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function norm(s){return (s==null?"":String(s)).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim().replace(/\s+/g," ");}
+function normScore(s){return norm(s).replace(/\s*[-–]\s*/g,"-");}
+/* compara respuesta vs correcta según tipo; devuelve puntos (0 si falla/sin resultado) */
+function qPoints(answer, correct, q){
+  if(correct==null||String(correct).trim()==="")return 0;
+  const a=q.type==="marcador"?normScore(answer):norm(answer);
+  const c=q.type==="marcador"?normScore(correct):norm(correct);
+  return (a!==""&&a===c)?q.pts:0;
+}
+function parseCSV(text){const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+    else{if(c==='"')q=true;else if(c===','){row.push(f);f="";}
+      else if(c==='\n'){row.push(f);rows.push(row);row=[];f="";}
+      else if(c==='\r'){}else f+=c;}}
+  if(f.length||row.length){row.push(f);rows.push(row);}return rows;}
+
+/* ---------- estado ---------- */
+let PLAYERS=[];      // {name, score, answers:[...]}
+let CORRECT=null;    // fila de respuestas correctas (por col) o null
+
+function findHeader(rows){
+  for(let i=0;i<rows.length;i++){
+    const idx=rows[i].findIndex(c=>norm(c)==="nombre");
+    if(idx>=0) return {row:i, nameCol:idx};
+  }
+  return {row:0, nameCol:1};
+}
+function buildPlayers(rows){
+  const h=findHeader(rows);
+  const body=rows.slice(h.row+1).filter(r=>String(r[h.nameCol]||"").trim()!=="");
+  return body.map(r=>({
+    name:(r[h.nameCol]||"").trim(),
+    scoreC:parseFloat(String(r[2]||"0").replace(",","."))||0,   // columna C de la hoja
+    score:0,
+    row:r
+  }));
+}
+/* RESULT con formato plantilla: [Bloque, Pregunta, Puntos, Respuesta correcta]
+   Se empareja por ORDEN de fila con QUESTIONS. */
+function buildCorrect(rows){
+  const data=rows.filter(r=>r.some(c=>String(c).trim()!==""));
+  let start=0;
+  for(let i=0;i<data.length;i++){
+    const j=data[i].map(norm).join("|");
+    if(j.includes("respuesta")||j.includes("pregunta")){start=i+1;break;}
+  }
+  const body=data.slice(start);
+  const map={}; let any=false;
+  QUESTIONS.forEach((q,idx)=>{
+    const r=body[idx];
+    const v=r?(r[3]!=null?r[3]:r[r.length-1]):"";
+    map[q.col]=v||"";
+    if(String(v||"").trim()!=="")any=true;
+  });
+  map.__any=any;
+  return map;
+}
+/* asigna puntuación final: si RESULT tiene resultados, la web calcula;
+   si no, usa la columna C de la hoja (por si usas fórmulas). */
+function applyScores(){
+  const useComputed = CORRECT && CORRECT.__any;
+  PLAYERS.forEach(p=>{
+    if(useComputed){
+      p.score = QUESTIONS.reduce((a,q)=>a+qPoints(p.row[q.col]||"", CORRECT[q.col], q),0);
+    }else{
+      p.score = p.scoreC;
+    }
+  });
+}
+
+/* ---------- render ---------- */
+function renderStats(){
+  $("#statsband").innerHTML=[
+    {num:PLAYERS.length, lab:"Participantes"},
+    {num:"110 €", lab:"En juego"},
+    {num:QUESTIONS.length, lab:"Preguntas"},
+  ].map(c=>`<div class="stat"><div class="num">${c.num}</div><div class="lab">${c.lab}</div></div>`).join("");
+  const anyScore=PLAYERS.some(p=>p.score>0);
+  $("#subtitle").textContent=anyScore?`${PLAYERS.length} participantes · clasificación en directo`
+    :`${PLAYERS.length} participantes · puntuaciones aún a 0 (columna C)`;
+}
+
+function sortedPlayers(){return [...PLAYERS].sort((a,b)=>b.score-a.score || a.name.localeCompare(b.name));}
+
+function renderClasif(){
+  const s=sortedPlayers();
+  const max=Math.max(1,...s.map(p=>p.score));
+  // podio
+  const pod=[1,0,2]; // posiciones visuales: 2º,1º,3º
+  let podium='<div class="podium">';
+  pod.forEach(i=>{
+    const p=s[i]; if(!p){podium+='<div class="pod"></div>';return;}
+    const cls=i===0?"pod1":i===1?"pod2":"pod3";
+    const medal=i===0?"🥇":i===1?"🥈":"🥉";
+    const crown=i===0?'<div class="crown">👑 CAMPEÓN</div>':'';
+    podium+=`<div class="pod ${cls}">${crown}
+      <div class="av">${medal}</div>
+      <div class="pname">${esc(p.name)}</div>
+      <div class="ppts">${p.score} pts</div>
+      <div class="base">${i+1}</div></div>`;
+  });
+  podium+='</div>';
+  // barras
+  let bars='';
+  s.forEach((p,i)=>{
+    const cls=i<3?`top${i+1}`:'';
+    bars+=`<div class="barrow ${cls}">
+      <div class="rk">${i+1}</div>
+      <div class="bn">${esc(p.name)}</div>
+      <div class="track"><div class="fill" style="width:${Math.round(p.score/max*100)}%"></div></div>
+      <div class="bv">${p.score}</div></div>`;
+  });
+  $("#tab-clasif").innerHTML=`<div class="card"><h2>🏆 Clasificación</h2>${podium}${bars}
+    ${PLAYERS.some(p=>p.score>0)?'':'<div class="note">Las barras crecerán cuando la columna C (puntuación) tenga valores.</div>'}</div>`;
+}
+
+function renderIndiv(){
+  const s=[...PLAYERS].sort((a,b)=>a.name.localeCompare(b.name));
+  $("#tab-indiv").innerHTML=`<div class="card"><h2>👤 Apuestas por persona</h2>
+    <select id="selP">${s.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join("")}</select>
+    <div id="pdet"></div></div>`;
+  const sel=$("#selP");
+  sel.onchange=()=>showP(s[sel.value]);
+  if(s.length) showP(s[0]);
+}
+function showP(p){
+  if(!p)return;
+  let h=`<div class="q" style="border:0;padding-top:12px"><div class="ql">Puntuación total (columna C)</div>
+    <div class="qv" style="font-size:1.3rem;color:var(--verde)">${p.score} pts</div></div>`;
+  let lb="";
+  QUESTIONS.forEach(q=>{
+    if(q.block!==lb){h+=`<div class="blockhead">${esc(q.block)}</div>`;lb=q.block;}
+    const a=p.row[q.col]||"—";
+    let mark="";
+    if(CORRECT&&String(CORRECT[q.col]||"").trim()!==""){
+      const pts=qPoints(a,CORRECT[q.col],q);
+      mark = pts>0 ? ` <b style="color:var(--verde)">✅ +${pts}</b>` : ' ❌';
+    }
+    h+=`<div class="q"><div class="ql">${esc(q.short)} · ${q.pts}p</div><div class="qv">${esc(a)}${mark}</div></div>`;
+  });
+  $("#pdet").innerHTML=h;
+}
+
+function renderPreg(){
+  $("#tab-preg").innerHTML=`<div class="card"><h2>❓ Respuestas por pregunta</h2>
+    <select id="selQ">${QUESTIONS.map((q,i)=>`<option value="${i}">${esc(q.block.split("·")[0].trim())} — ${esc(q.short)}</option>`).join("")}</select>
+    <div id="qdet"></div></div>`;
+  const sel=$("#selQ");
+  sel.onchange=()=>showQ(+sel.value);
+  showQ(0);
+}
+function showQ(i){
+  const q=QUESTIONS[i];
+  const counts={};
+  PLAYERS.forEach(p=>{const v=(p.row[q.col]||"").trim()||"—";const k=v;counts[k]=(counts[k]||0)+1;});
+  const order=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(...order.map(o=>o[1]));
+  const correct=CORRECT?(CORRECT[q.col]||"").trim():"";
+  let head=correct?`<div class="note" style="margin:0 0 6px">Respuesta correcta: <b>${esc(correct)}</b> · ${q.pts} p</div>`:"";
+  let dist='<div class="dist">';
+  const cmp=q.type==="marcador"?normScore:norm;
+  order.forEach(([val,cnt])=>{
+    const ok=correct&&cmp(val)===cmp(correct)&&val!=="—";
+    dist+=`<div class="lbl"><span>${ok?'✅ ':''}${esc(val)}</span><span class="n">${cnt}</span></div>
+      <div class="ansbar" style="width:${Math.round(cnt/max*100)}%;${ok?'background:var(--verde)':''}"></div>`;
+  });
+  dist+='</div>';
+  $("#qdet").innerHTML=head+dist;
+}
+
+function renderAll(){
+  renderStats();renderClasif();renderIndiv();renderPreg();
+  $("#updated").textContent="Actualizado "+new Date().toLocaleString("es-ES",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+}
+
+/* ---------- carga ---------- */
+async function fetchCSV(url){
+  const u=url+(url.includes("?")?"&":"?")+"_="+Date.now();
+  const r=await fetch(u); if(!r.ok)throw new Error("HTTP "+r.status);
+  return parseCSV(await r.text());
+}
+function useSnapshot(){
+  CORRECT=null;
+  PLAYERS=buildPlayers(parseCSV(SNAPSHOT_CSV));
+  applyScores();
+}
+async function load(){
+  const btn=$("#refresh");btn.innerHTML='<span class="spin"></span>';
+  let live=false;
+  try{
+    if(CONFIG.RESP_CSV){
+      const [resp,res]=await Promise.all([
+        fetchCSV(CONFIG.RESP_CSV),
+        CONFIG.RESULT_CSV?fetchCSV(CONFIG.RESULT_CSV):Promise.resolve(null)
+      ]);
+      const players=buildPlayers(resp);
+      if(!players.length) throw new Error("RESP vacío");
+      CORRECT=res?buildCorrect(res):null;
+      PLAYERS=players;
+      applyScores();
+      live=true;
+    }else{
+      useSnapshot();
+    }
+  }catch(e){
+    useSnapshot();               // red de seguridad: muestra datos guardados
+    window.__loadErr=e.message;
+  }
+  renderAll();
+  if(!live && CONFIG.RESP_CSV){
+    $("#updated").textContent="Datos guardados (la conexión en vivo no respondió)";
+  }
+  btn.innerHTML='↻ Actualizar';
+}
+
+document.querySelectorAll("nav.tabs button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    ["clasif","indiv","preg"].forEach(t=>$("#tab-"+t).classList.toggle("hidden",t!==b.dataset.tab));
+  };
+});
+$("#refresh").onclick=load;
+load();
+if(CONFIG.AUTO_REFRESH_SEG>0) setInterval(load,CONFIG.AUTO_REFRESH_SEG*1000);
+</script>
+</body>
+</html>
